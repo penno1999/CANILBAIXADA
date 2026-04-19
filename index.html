@@ -26,6 +26,7 @@ body {
   overflow: hidden;
 }
 
+/* FUNDO */
 .bg {
   position: fixed;
   width: 100%;
@@ -37,6 +38,7 @@ body {
   z-index: 0;
 }
 
+/* PARTÍCULAS */
 #particles {
   position: fixed;
   width: 100%;
@@ -45,6 +47,7 @@ body {
   pointer-events: none;
 }
 
+/* OVERLAY */
 .overlay {
   position: fixed;
   width: 100%;
@@ -53,6 +56,7 @@ body {
   z-index: 2;
 }
 
+/* CARD PRINCIPAL */
 .container {
   position: relative;
   z-index: 3;
@@ -64,18 +68,46 @@ body {
   background: rgba(255,255,255,0.05);
   backdrop-filter: blur(20px);
   box-shadow: 0 0 40px rgba(0,0,0,0.8);
-  transition: 0.4s;
+  transition: 0.3s;
 }
 
-.ativo-border { border: 2px solid #00ff88; }
-.inativo-border { border: 2px solid #ffd700; }
+.ativo-border {
+  border: 2px solid #00ff88;
+}
 
+.inativo-border {
+  border: 2px solid #ffd700;
+}
+
+/* 🔥 LOGO PREMIUM */
 .logo {
-  width: 110px;
-  border-radius: 50%;
-  margin-bottom: 10px;
+  width: 160px;
+  height: auto;
+  border-radius: 16px;
+
+  padding: 10px;
+  margin-bottom: 15px;
+
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255, 255, 255, 0.15);
+
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.5),
+    inset 0 0 10px rgba(255, 255, 255, 0.05);
+
+  transition: 0.3s ease;
 }
 
+.logo:hover {
+  transform: scale(1.05);
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.7),
+    inset 0 0 12px rgba(255, 255, 255, 0.08);
+}
+
+/* FOTO SÓCIO */
 .foto {
   width: 110px;
   height: 110px;
@@ -95,7 +127,7 @@ body {
 
 .name {
   font-size: 20px;
-  color: #fff;
+  color: #ffffff;
 }
 
 .status {
@@ -121,11 +153,7 @@ body {
   font-weight: bold;
 }
 
-#loading {
-  color: #fff;
-  margin-top: 10px;
-}
-
+/* FRASE */
 .frase-box {
   position: fixed;
   bottom: 0;
@@ -162,7 +190,6 @@ body {
 <div class="container" id="card">
   <img class="logo" src="LOGO.jpeg">
   <div class="title">2° CANIL BAIXADA</div>
-  <div id="loading">CARREGANDO...</div>
   <div id="result"></div>
 </div>
 
@@ -174,17 +201,11 @@ body {
 <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
 
 <script>
-let particlesLoaded = false;
-
 function loadParticles(color) {
-  if (particlesLoaded) tsParticles.domItem(0)?.destroy();
-
-  particlesLoaded = true;
-
   tsParticles.load("particles", {
     fullScreen: { enable: false },
     particles: {
-      number: { value: 35 },
+      number: { value: 40 },
       color: { value: color },
       links: {
         enable: true,
@@ -192,12 +213,14 @@ function loadParticles(color) {
         opacity: 0.2,
         distance: 120
       },
-      move: { enable: true, speed: 0.8 },
+      move: { enable: true, speed: 1 },
       size: { value: { min: 1, max: 3 } },
       opacity: { value: 0.4 }
     }
   });
 }
+
+loadParticles("#ffffff");
 
 const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRc-Ze2QdExw43RL_ESfAnr6S9Hv_Qw61akVcWDIAlToZkANo9zn-ZACLtYMsLwFRDY52zv2DYRhBin/pub?output=csv";
 
@@ -205,30 +228,12 @@ function getId() {
   return new URLSearchParams(window.location.search).get("id");
 }
 
-function cleanDriveLink(url) {
-  if (!url) return "";
-
-  // já vem pronto
-  if (url.includes("drive.google.com/uc?export=view")) return url.trim();
-
-  // converter link compartilhado
-  const match = url.match(/\/d\/(.*?)\//);
-  if (match) {
-    return `https://drive.google.com/uc?export=view&id=${match[1]}`;
-  }
-
-  return url;
-}
-
 async function loadData() {
   const result = document.getElementById("result");
-  const loading = document.getElementById("loading");
   const card = document.getElementById("card");
-
   const id = getId();
 
   if (!id) {
-    loading.style.display = "none";
     result.innerHTML = "<div class='error'>ID NÃO INFORMADO</div>";
     return;
   }
@@ -237,50 +242,41 @@ async function loadData() {
     const res = await fetch(SHEET_URL);
     const text = await res.text();
 
-    // CSV seguro (evita quebra por vírgula)
-    const rows = text.trim().split("\n").map(r =>
-      r.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/)
-    );
+    const rows = text.trim().split("\n").map(r => r.split(",").map(c => c.trim()));
 
     let found = false;
 
     for (let i = 1; i < rows.length; i++) {
-      const [sheetId, nome, status, fotoRaw] = rows[i];
+      const [sheetId, nome, status, foto] = rows[i];
 
       if (sheetId === id) {
         found = true;
 
-        loading.style.display = "none";
+        const st = status.toUpperCase();
+        const cls = st === "ATIVO" ? "ativo" : "inativo";
 
-        const st = (status || "").trim().toUpperCase();
-        const isAtivo = st === "ATIVO";
-
-        const foto = cleanDriveLink((fotoRaw || "").replace(/"/g, "").trim());
-
-        const cls = isAtivo ? "ativo" : "inativo";
-        const border = isAtivo ? "ativo-border" : "inativo-border";
-        const particleColor = isAtivo ? "#00ff88" : "#ffd700";
-
-        loadParticles(particleColor);
-        card.classList.add(border);
+        if (st === "ATIVO") {
+          loadParticles("#00ff88");
+          card.classList.add("ativo-border");
+        } else {
+          loadParticles("#ffd700");
+          card.classList.add("inativo-border");
+        }
 
         result.innerHTML = `
           <img class="foto" src="${foto}" onerror="this.src='https://via.placeholder.com/110'">
           <div class="name">${nome}</div>
           <div class="status ${cls}">${st}</div>
         `;
-
         break;
       }
     }
 
     if (!found) {
-      loading.style.display = "none";
       result.innerHTML = "<div class='error'>NÃO ENCONTRADO</div>";
     }
 
-  } catch (e) {
-    loading.style.display = "none";
+  } catch {
     result.innerHTML = "<div class='error'>ERRO NA CONEXÃO</div>";
   }
 }
