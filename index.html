@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <div class="container">
-  <img class="logo" src="logo.png" alt="Logo">
-  <div class="title">2° CANIL BAIXADA</div>
-</div>
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,11 +22,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-<img class="logo" src="logo.png" alt="Logo">
   background: url('https://drive.google.com/uc?export=view&id=1cYgyBNHJJCpTTkuOX0UNxzcYoov3l67R') no-repeat center/cover;
 }
 
-/* overlay forte igual site */
 .overlay {
   position: absolute;
   width: 100%;
@@ -37,22 +32,17 @@ body {
   background: radial-gradient(circle, rgba(0,0,0,0.6), rgba(0,0,0,0.95));
 }
 
-/* card central */
 .container {
   position: relative;
   z-index: 2;
   width: 90%;
   max-width: 380px;
   padding: 30px;
-
   border-radius: 20px;
   text-align: center;
-
   background: rgba(255,255,255,0.05);
   backdrop-filter: blur(20px);
-
   box-shadow: 0 0 40px rgba(0,0,0,0.8);
-
   animation: fadeIn 0.8s ease;
 }
 
@@ -62,7 +52,6 @@ body {
   margin-bottom: 15px;
   box-shadow: 0 0 20px rgba(255,255,255,0.3);
 }
-}
 
 .title {
   font-weight: 600;
@@ -70,20 +59,17 @@ body {
   margin-bottom: 20px;
 }
 
-/* nome */
 .name {
   font-size: 20px;
   font-weight: 500;
 }
 
-/* status gigante estilo sistema */
 .status {
   margin-top: 15px;
   font-size: 28px;
   font-weight: 800;
   padding: 15px;
   border-radius: 12px;
-
   animation: pulse 1.2s infinite alternate;
 }
 
@@ -105,7 +91,6 @@ body {
   font-size: 18px;
 }
 
-/* animações */
 @keyframes pulse {
   from { transform: scale(1); }
   to { transform: scale(1.07); }
@@ -123,16 +108,16 @@ body {
 <div class="overlay"></div>
 
 <div class="container">
-  <img class="logo" src="https://drive.google.com/uc?export=view&id=1D8ofLtBTTnSs_9MpfHjJgNarurysTSB3">
-  <div class="title">2° CANIL BAIXADA</div>
+  <!-- LOGO AQUI (CORRETO) -->
+  <img class="logo" src="logo.png" alt="Logo">
 
+  <div class="title">2° CANIL BAIXADA</div>
   <div id="result">Carregando...</div>
 </div>
 
 <script>
 const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRc-Ze2QdExw43RL_ESfAnr6S9Hv_Qw61akVcWDIAlToZkANo9zn-ZACLtYMsLwFRDY52zv2DYRhBin/pub?output=csv";
 
-/* pega id da url */
 function getId() {
   const params = new URLSearchParams(window.location.search);
   return params.get("id");
