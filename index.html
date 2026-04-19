@@ -68,44 +68,60 @@ body {
   background: rgba(255,255,255,0.05);
   backdrop-filter: blur(20px);
   box-shadow: 0 0 40px rgba(0,0,0,0.8);
+  transition: 0.3s;
+}
+
+.ativo-border {
+  border: 2px solid #00ff88;
+}
+
+.inativo-border {
+  border: 2px solid #ffd700;
 }
 
 .logo {
-  width: 130px;
+  width: 110px;
   border-radius: 50%;
-  margin-bottom: 15px;
-  box-shadow: 0 0 20px rgba(255,255,255,0.3);
+  margin-bottom: 10px;
+}
+
+.foto {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 10px auto;
+  display: block;
+  border: 2px solid #fff;
 }
 
 .title {
   font-weight: 600;
   font-size: 18px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .name {
   font-size: 20px;
+  color: #ffffff;
 }
 
 .status {
-  margin-top: 15px;
-  font-size: 28px;
+  margin-top: 10px;
+  font-size: 26px;
   font-weight: 800;
-  padding: 15px;
-  border-radius: 12px;
-  animation: pulse 1.2s infinite alternate;
+  padding: 12px;
+  border-radius: 10px;
 }
 
 .ativo {
   color: #00ff88;
   background: rgba(0,255,100,0.1);
-  box-shadow: 0 0 25px #00ff88;
 }
 
 .inativo {
   color: #ffd700;
   background: rgba(255,215,0,0.1);
-  box-shadow: 0 0 25px #ffd700;
 }
 
 .error {
@@ -113,37 +129,28 @@ body {
   font-weight: bold;
 }
 
-/* FRASE FIXA */
+/* FRASE */
 .frase-box {
   position: fixed;
   bottom: 0;
-  left: 0;
   width: 100%;
   text-align: center;
   z-index: 9999;
-  padding: 10px 15px 15px;
-  pointer-events: none;
+  padding: 10px;
 }
 
 .frase-main {
   font-family: 'Permanent Marker', cursive;
   font-size: 26px;
-  color: #ffffff;
-  -webkit-text-stroke: 0.5px #000;
+  color: #fff;
 }
 
 .frase-sub {
-  margin-top: 5px;
   font-size: 12px;
-  color: #cccccc;
+  color: #ccc;
 }
 
-/* ANIMAÇÕES */
-@keyframes pulse {
-  from { transform: scale(1); }
-  to { transform: scale(1.07); }
-}
-
+/* ANIMAÇÃO */
 @keyframes zoomBg {
   from { transform: scale(1.1); }
   to { transform: scale(1.2); }
@@ -157,7 +164,7 @@ body {
 <div id="particles"></div>
 <div class="overlay"></div>
 
-<div class="container">
+<div class="container" id="card">
   <img class="logo" src="LOGO.jpeg">
   <div class="title">2° CANIL BAIXADA</div>
   <div id="result"></div>
@@ -200,6 +207,7 @@ function getId() {
 
 async function loadData() {
   const result = document.getElementById("result");
+  const card = document.getElementById("card");
   const id = getId();
 
   if (!id) {
@@ -216,7 +224,7 @@ async function loadData() {
     let found = false;
 
     for (let i = 1; i < rows.length; i++) {
-      const [sheetId, nome, status] = rows[i];
+      const [sheetId, nome, status, foto] = rows[i];
 
       if (sheetId === id) {
         found = true;
@@ -224,13 +232,17 @@ async function loadData() {
         const st = status.toUpperCase();
         const cls = st === "ATIVO" ? "ativo" : "inativo";
 
+        /* partículas */
         if (st === "ATIVO") {
           loadParticles("#00ff88");
+          card.classList.add("ativo-border");
         } else {
           loadParticles("#ffd700");
+          card.classList.add("inativo-border");
         }
 
         result.innerHTML = `
+          <img class="foto" src="${foto}">
           <div class="name">${nome}</div>
           <div class="status ${cls}">${st}</div>
         `;
