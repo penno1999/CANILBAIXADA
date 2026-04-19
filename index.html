@@ -68,7 +68,6 @@ body {
   background: rgba(255,255,255,0.05);
   backdrop-filter: blur(20px);
   box-shadow: 0 0 40px rgba(0,0,0,0.8);
-  animation: fadeIn 0.8s ease;
 }
 
 .logo {
@@ -114,15 +113,14 @@ body {
   font-weight: bold;
 }
 
-/* FRASES */
+/* FRASE FIXA */
 .frase-box {
-  position: absolute;
-  bottom: 30px;
+  position: fixed;
+  bottom: 20px;
   width: 100%;
   text-align: center;
   z-index: 3;
   padding: 0 10px;
-  animation: fraseEntrada 1.2s ease forwards;
 }
 
 .frase-main {
@@ -131,27 +129,14 @@ body {
   letter-spacing: 2px;
   color: #fff;
   -webkit-text-stroke: 1px #000;
-
-  text-shadow:
-    0 0 10px rgba(255,255,255,0.8),
-    0 0 20px rgba(0,255,136,0.6),
-    0 0 30px rgba(0,255,136,0.4);
-
-  opacity: 0;
-  animation: fraseTexto 1s ease forwards;
-  animation-delay: 0.5s;
+  animation: glowPulse 2s ease-in-out infinite alternate;
 }
 
 .frase-sub {
-  margin-top: 8px;
+  margin-top: 6px;
   font-size: 12px;
   color: #ccc;
-
   text-shadow: 0 0 5px rgba(0,0,0,0.8);
-
-  opacity: 0;
-  animation: fraseTexto 1s ease forwards;
-  animation-delay: 0.9s;
 }
 
 /* ANIMAÇÕES */
@@ -160,25 +145,24 @@ body {
   to { transform: scale(1.07); }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(30px);}
-  to { opacity: 1; transform: translateY(0);}
-}
-
 @keyframes zoomBg {
   from { transform: scale(1.1); }
   to { transform: scale(1.2); }
 }
 
-@keyframes fraseEntrada {
-  from { transform: translateY(40px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes fraseTexto {
-  0% { opacity: 0; transform: scale(0.9); }
-  60% { opacity: 1; transform: scale(1.05); }
-  100% { transform: scale(1); }
+@keyframes glowPulse {
+  0% {
+    text-shadow:
+      0 0 5px rgba(255,255,255,0.5),
+      0 0 10px rgba(0,255,136,0.3),
+      0 0 15px rgba(0,255,136,0.2);
+  }
+  100% {
+    text-shadow:
+      0 0 15px rgba(255,255,255,0.9),
+      0 0 25px rgba(0,255,136,0.7),
+      0 0 35px rgba(0,255,136,0.5);
+  }
 }
 </style>
 </head>
