@@ -56,7 +56,7 @@ body {
   z-index: 2;
 }
 
-/* 🔥 CARD PREMIUM DINÂMICO */
+/* 🔥 CARD LIMPO PREMIUM */
 .container {
   position: relative;
   z-index: 3;
@@ -73,22 +73,7 @@ body {
     0 12px 40px rgba(0,0,0,0.95),
     inset 0 0 25px rgba(255,255,255,0.03);
 
-  /* entrada suave */
-  opacity: 0;
-  transform: scale(0.95);
   animation: enterCard 0.6s ease-out forwards, floatCard 6s ease-in-out infinite;
-
-  overflow: hidden;
-}
-
-/* brilho que segue mouse */
-.container::after {
-  content: "";
-  position: absolute;
-  inset: -2px;
-  border-radius: 18px;
-  background: radial-gradient(circle at var(--x, 50%) var(--y, 0%), rgba(255,255,255,0.08), transparent 40%);
-  pointer-events: none;
 }
 
 /* status borda */
@@ -100,7 +85,7 @@ body {
   border: 1px solid #ffd700;
 }
 
-/* 🔥 HEADER (LOGO + TEXTO) */
+/* HEADER */
 .header {
   display: flex;
   flex-direction: column;
@@ -108,12 +93,14 @@ body {
   margin-bottom: 15px;
 }
 
+/* LOGO */
 .logo {
   width: 150px;
   height: auto;
   margin-bottom: 8px;
 }
 
+/* TEXTO ABAIXO DA LOGO */
 .brand {
   font-size: 18px;
   font-weight: 700;
@@ -195,6 +182,10 @@ body {
 }
 
 @keyframes enterCard {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
   to {
     opacity: 1;
     transform: scale(1);
@@ -217,7 +208,7 @@ body {
 
 <div class="container" id="card">
 
-  <!-- LOGO + TEXTO -->
+  <!-- LOGO + TEXTO ABAIXO -->
   <div class="header">
     <img class="logo" src="LOGO.jpeg">
     <div class="brand">2° CANIL BAIXADA</div>
@@ -261,19 +252,9 @@ function getId() {
   return new URLSearchParams(window.location.search).get("id");
 }
 
-/* efeito luz seguindo mouse */
-const card = document.getElementById("card");
-card.addEventListener("mousemove", (e) => {
-  const rect = card.getBoundingClientRect();
-  const x = ((e.clientX - rect.left) / rect.width) * 100;
-  const y = ((e.clientY - rect.top) / rect.height) * 100;
-
-  card.style.setProperty("--x", x + "%");
-  card.style.setProperty("--y", y + "%");
-});
-
 async function loadData() {
   const result = document.getElementById("result");
+  const card = document.getElementById("card");
   const id = getId();
 
   if (!id) {
