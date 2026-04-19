@@ -8,6 +8,7 @@
 <title>Verificação - 2° CANIL BAIXADA</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
 
 <style>
 * {
@@ -28,8 +29,6 @@ body {
 /* FUNDO */
 .bg {
   position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   background: url('FUNDO.jpeg') no-repeat center/cover;
@@ -87,7 +86,6 @@ body {
 
 .name {
   font-size: 20px;
-  font-weight: 500;
 }
 
 .status {
@@ -114,7 +112,46 @@ body {
 .error {
   color: #ffcc00;
   font-weight: bold;
-  font-size: 18px;
+}
+
+/* FRASES */
+.frase-box {
+  position: absolute;
+  bottom: 30px;
+  width: 100%;
+  text-align: center;
+  z-index: 3;
+  padding: 0 10px;
+  animation: fraseEntrada 1.2s ease forwards;
+}
+
+.frase-main {
+  font-family: 'Bangers', cursive;
+  font-size: 28px;
+  letter-spacing: 2px;
+  color: #fff;
+  -webkit-text-stroke: 1px #000;
+
+  text-shadow:
+    0 0 10px rgba(255,255,255,0.8),
+    0 0 20px rgba(0,255,136,0.6),
+    0 0 30px rgba(0,255,136,0.4);
+
+  opacity: 0;
+  animation: fraseTexto 1s ease forwards;
+  animation-delay: 0.5s;
+}
+
+.frase-sub {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #ccc;
+
+  text-shadow: 0 0 5px rgba(0,0,0,0.8);
+
+  opacity: 0;
+  animation: fraseTexto 1s ease forwards;
+  animation-delay: 0.9s;
 }
 
 /* ANIMAÇÕES */
@@ -132,6 +169,17 @@ body {
   from { transform: scale(1.1); }
   to { transform: scale(1.2); }
 }
+
+@keyframes fraseEntrada {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fraseTexto {
+  0% { opacity: 0; transform: scale(0.9); }
+  60% { opacity: 1; transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
 </style>
 </head>
 
@@ -142,19 +190,22 @@ body {
 <div class="overlay"></div>
 
 <div class="container">
-  <img class="logo" src="LOGO.jpeg" alt="Logo">
+  <img class="logo" src="LOGO.jpeg">
   <div class="title">2° CANIL BAIXADA</div>
   <div id="result"></div>
 </div>
 
-<!-- PARTICULAS -->
+<div class="frase-box">
+  <div class="frase-main">NÃO É MODA, É TRADIÇÃO!</div>
+  <div class="frase-sub">COMO NÃO SOMOS OS ÚNICOS, DECIDIMOS SER OS MELHORES!</div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
 
 <script>
 function loadParticles(color) {
   tsParticles.load("particles", {
     fullScreen: { enable: false },
-    background: { color: "transparent" },
     particles: {
       number: { value: 40 },
       color: { value: color },
@@ -171,12 +222,8 @@ function loadParticles(color) {
   });
 }
 
-/* padrão branco */
 loadParticles("#ffffff");
-</script>
 
-<!-- SISTEMA -->
-<script>
 const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRc-Ze2QdExw43RL_ESfAnr6S9Hv_Qw61akVcWDIAlToZkANo9zn-ZACLtYMsLwFRDY52zv2DYRhBin/pub?output=csv";
 
 function getId() {
@@ -194,9 +241,8 @@ async function loadData() {
 
   try {
     const res = await fetch(SHEET_URL);
-    if (!res.ok) throw new Error();
-
     const text = await res.text();
+
     const rows = text.trim().split("\n").map(r => r.split(",").map(c => c.trim()));
 
     let found = false;
@@ -210,7 +256,6 @@ async function loadData() {
         const st = status.toUpperCase();
         const cls = st === "ATIVO" ? "ativo" : "inativo";
 
-        /* 🔥 muda cor das partículas */
         if (st === "ATIVO") {
           loadParticles("#00ff88");
         } else {
