@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Verificação - 2° CANIL BAIXADA</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: url('https://drive.google.com/uc?export=view&id=1cYgyBNHJJCpTTkuOX0UNxzcYoov3l67R') no-repeat center/cover;
+}
+
+/* overlay forte igual site */
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(0,0,0,0.6), rgba(0,0,0,0.95));
+}
+
+/* card central */
+.container {
+  position: relative;
+  z-index: 2;
+  width: 90%;
+  max-width: 380px;
+  padding: 30px;
+
+  border-radius: 20px;
+  text-align: center;
+
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(20px);
+
+  box-shadow: 0 0 40px rgba(0,0,0,0.8);
+
+  animation: fadeIn 0.8s ease;
+}
+
+.logo {
+  width: 120px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+  box-shadow: 0 0 20px rgba(255,255,255,0.2);
+}
+
+.title {
+  font-weight: 600;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+/* nome */
+.name {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+/* status gigante estilo sistema */
+.status {
+  margin-top: 15px;
+  font-size: 28px;
+  font-weight: 800;
+  padding: 15px;
+  border-radius: 12px;
+
+  animation: pulse 1.2s infinite alternate;
+}
+
+.ativo {
+  color: #00ff88;
+  background: rgba(0,255,100,0.1);
+  box-shadow: 0 0 25px #00ff88;
+}
+
+.inativo {
+  color: #ff4d4d;
+  background: rgba(255,0,0,0.1);
+  box-shadow: 0 0 25px #ff4d4d;
+}
+
+.error {
+  color: #ffcc00;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* animações */
+@keyframes pulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.07); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="overlay"></div>
+
+<div class="container">
+  <img class="logo" src="https://drive.google.com/uc?export=view&id=1D8ofLtBTTnSs_9MpfHjJgNarurysTSB3">
+  <div class="title">2° CANIL BAIXADA</div>
+
+  <div id="result">Carregando...</div>
+</div>
+
+<script>
+const SHEET_URL = "COLE_SEU_LINK_CSV_AQUI";
+
+/* pega id da url */
+function getId() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("id");
+}
+
+async function loadData() {
+  const result = document.getElementById("result");
+  const id = getId();
+
+  if (!id) {
+    result.innerHTML = "<div class='error'>ID NÃO INFORMADO</div>";
+    return;
+  }
+
+  try {
+    const res = await fetch(SHEET_URL);
+    if (!res.ok) throw new Error();
+
+    const text = await res.text();
+    const rows = text.split("\n").map(r => r.split(","));
+
+    let found = false;
+
+    rows.slice(1).forEach(row => {
+      const [sheetId, nome, status] = row;
+
+      if (sheetId === id) {
+        found = true;
+
+        const st = status.trim().toUpperCase();
+        const cls = st === "ATIVO" ? "ativo" : "inativo";
+
+        result.innerHTML = `
+          <div class="name">${nome}</div>
+          <div class="status ${cls}">${st}</div>
+        `;
+      }
+    });
+
+    if (!found) {
+      result.innerHTML = "<div class='error'>NÃO ENCONTRADO</div>";
+    }
+
+  } catch {
+    result.innerHTML = "<div class='error'>ERRO NA CONEXÃO</div>";
+  }
+}
+
+loadData();
+</script>
+
+</body>
+</html>
