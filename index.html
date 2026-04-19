@@ -25,14 +25,14 @@ body {
   overflow: hidden;
 }
 
-/* FUNDO COM BLUR */
+/* FUNDO */
 .bg {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: url('FUNDO.jpeg') no-repeat center center/cover;
+  background: url('FUNDO.jpeg') no-repeat center/cover;
   filter: blur(8px);
   transform: scale(1.1);
   animation: zoomBg 20s ease-in-out infinite alternate;
@@ -42,15 +42,13 @@ body {
 /* PARTÍCULAS */
 #particles {
   position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   z-index: 1;
   pointer-events: none;
 }
 
-/* ESCURECIMENTO */
+/* OVERLAY */
 .overlay {
   position: fixed;
   width: 100%;
@@ -108,9 +106,9 @@ body {
 }
 
 .inativo {
-  color: #ff4d4d;
-  background: rgba(255,0,0,0.1);
-  box-shadow: 0 0 25px #ff4d4d;
+  color: #ffd700;
+  background: rgba(255,215,0,0.1);
+  box-shadow: 0 0 25px #ffd700;
 }
 
 .error {
@@ -119,6 +117,7 @@ body {
   font-size: 18px;
 }
 
+/* ANIMAÇÕES */
 @keyframes pulse {
   from { transform: scale(1); }
   to { transform: scale(1.07); }
@@ -145,30 +144,35 @@ body {
 <div class="container">
   <img class="logo" src="LOGO.jpeg" alt="Logo">
   <div class="title">2° CANIL BAIXADA</div>
-  <div id="result">Carregando...</div>
+  <div id="result"></div>
 </div>
 
 <!-- PARTICULAS -->
 <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
 
 <script>
-tsParticles.load("particles", {
-  fullScreen: { enable: false },
-  background: { color: "transparent" },
-  particles: {
-    number: { value: 40 },
-    color: { value: "#ffffff" },
-    links: {
-      enable: true,
-      color: "#ffffff",
-      opacity: 0.2,
-      distance: 120
-    },
-    move: { enable: true, speed: 1 },
-    size: { value: { min: 1, max: 3 } },
-    opacity: { value: 0.4 }
-  }
-});
+function loadParticles(color) {
+  tsParticles.load("particles", {
+    fullScreen: { enable: false },
+    background: { color: "transparent" },
+    particles: {
+      number: { value: 40 },
+      color: { value: color },
+      links: {
+        enable: true,
+        color: color,
+        opacity: 0.2,
+        distance: 120
+      },
+      move: { enable: true, speed: 1 },
+      size: { value: { min: 1, max: 3 } },
+      opacity: { value: 0.4 }
+    }
+  });
+}
+
+/* padrão branco */
+loadParticles("#ffffff");
 </script>
 
 <!-- SISTEMA -->
@@ -176,8 +180,7 @@ tsParticles.load("particles", {
 const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRc-Ze2QdExw43RL_ESfAnr6S9Hv_Qw61akVcWDIAlToZkANo9zn-ZACLtYMsLwFRDY52zv2DYRhBin/pub?output=csv";
 
 function getId() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("id");
+  return new URLSearchParams(window.location.search).get("id");
 }
 
 async function loadData() {
@@ -194,25 +197,33 @@ async function loadData() {
     if (!res.ok) throw new Error();
 
     const text = await res.text();
-    const rows = text.split("\n").map(r => r.split(","));
+    const rows = text.trim().split("\n").map(r => r.split(",").map(c => c.trim()));
 
     let found = false;
 
-    rows.slice(1).forEach(row => {
-      const [sheetId, nome, status] = row;
+    for (let i = 1; i < rows.length; i++) {
+      const [sheetId, nome, status] = rows[i];
 
       if (sheetId === id) {
         found = true;
 
-        const st = status.trim().toUpperCase();
+        const st = status.toUpperCase();
         const cls = st === "ATIVO" ? "ativo" : "inativo";
+
+        /* 🔥 muda cor das partículas */
+        if (st === "ATIVO") {
+          loadParticles("#00ff88");
+        } else {
+          loadParticles("#ffd700");
+        }
 
         result.innerHTML = `
           <div class="name">${nome}</div>
           <div class="status ${cls}">${st}</div>
         `;
+        break;
       }
-    });
+    }
 
     if (!found) {
       result.innerHTML = "<div class='error'>NÃO ENCONTRADO</div>";
