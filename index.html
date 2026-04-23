@@ -130,24 +130,12 @@ body {
   color: #aaa;
 }
 
-/* 🔥 STATUS NOVO */
-.status-box {
-  margin-top: 12px;
-  width: 100%;
-}
-
-.status-label {
-  text-align: left;
-  font-size: 12px;
-  color: #aaa;
-  margin-bottom: 4px;
-  letter-spacing: 1px;
-}
-
+/* 🔥 STATUS FINAL (SEM TEXTO "STATUS") */
 .status-value {
+  margin-top: 14px;
   text-align: center;
-  font-size: 28px;
-  font-weight: 800;
+  font-size: 30px;
+  font-weight: 900;
   letter-spacing: 2px;
 }
 
@@ -216,9 +204,7 @@ body {
 
 <div class="app">
   <div class="container" id="card">
-
     <div id="result"></div>
-
   </div>
 </div>
 
@@ -297,11 +283,8 @@ async function loadData() {
           <div class="name" id="nome"></div>
           <div class="tipo">${tipo || "MEMBRO"}</div>
 
-          <div class="status-box">
-            <div class="status-label">STATUS</div>
-            <div class="status-value ${cls === "ativo" ? "ativo-text" : "inativo-text"}">
-              ${st}
-            </div>
+          <div class="status-value ${cls === "ativo" ? "ativo-text" : "inativo-text"}">
+            ${st}
           </div>
         `;
 
