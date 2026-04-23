@@ -8,6 +8,7 @@
 <title>Verificação - 2° CANIL BAIXADA</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
 
 <style>
 * {
@@ -22,21 +23,42 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #000;
+  overflow: hidden;
 }
 
-/* 🔥 TELA ESTILO APP */
+/* 🔥 FUNDO */
+.bg {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: url('FUNDO.jpeg') no-repeat center/cover;
+  filter: blur(6px);
+  transform: scale(1.1);
+  z-index: 0;
+}
+
+/* overlay */
+.overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: 1;
+}
+
+/* 📱 APP */
 .app {
+  position: relative;
+  z-index: 2;
   width: 100%;
   max-width: 420px;
   height: 90vh;
   border-radius: 30px;
-  overflow: hidden;
   background: #0a0a0a;
-  box-shadow: 0 0 60px rgba(0,0,0,0.9);
   display: flex;
   justify-content: center;
   align-items: center;
+  box-shadow: 0 0 60px rgba(0,0,0,0.9);
 }
 
 /* CARD */
@@ -56,17 +78,18 @@ body {
   animation: enter 0.4s ease-out;
 }
 
-/* HEADER */
+/* LOGO */
 .logo {
   width: 140px;
   margin-bottom: 0;
 }
 
+/* TEXTO COLADO */
 .brand {
   font-size: 16px;
   font-weight: 700;
   color: #fff;
-  margin-top: -10px;
+  margin-top: -12px;
 }
 
 /* FOTO */
@@ -79,17 +102,16 @@ body {
   border: 2px solid #fff;
 }
 
-/* 🔥 NOME MAIS FORTE */
+/* NOME FORTE */
 .name {
   font-size: 22px;
   font-weight: 800;
   color: #fff;
-  letter-spacing: 0.5px;
 }
 
-/* TIPO DE MEMBRO */
+/* TIPO */
 .tipo {
-  margin-top: 5px;
+  margin-top: 4px;
   font-size: 13px;
   color: #aaa;
 }
@@ -113,7 +135,32 @@ body {
   background: rgba(255,215,0,0.08);
 }
 
-/* ANIMAÇÕES RÁPIDAS */
+.error {
+  color: #ffcc00;
+}
+
+/* FRASE */
+.frase-box {
+  position: fixed;
+  bottom: 10px;
+  width: 100%;
+  text-align: center;
+  z-index: 3;
+}
+
+.frase-main {
+  font-family: 'Permanent Marker', cursive;
+  font-size: 22px;
+  color: #fff;
+  opacity: 0.9;
+}
+
+.frase-sub {
+  font-size: 11px;
+  color: #ccc;
+}
+
+/* ANIMAÇÃO */
 @keyframes enter {
   from {
     opacity: 0;
@@ -129,6 +176,9 @@ body {
 
 <body>
 
+<div class="bg"></div>
+<div class="overlay"></div>
+
 <div class="app">
   <div class="container" id="card">
 
@@ -138,6 +188,11 @@ body {
     <div id="result"></div>
 
   </div>
+</div>
+
+<div class="frase-box">
+  <div class="frase-main">NÃO É MODA, É TRADIÇÃO!</div>
+  <div class="frase-sub">COMO NÃO SOMOS OS ÚNICOS, DECIDIMOS SER OS MELHORES!</div>
 </div>
 
 <script>
@@ -152,7 +207,7 @@ async function loadData() {
   const id = getId();
 
   if (!id) {
-    result.innerHTML = "ID não informado";
+    result.innerHTML = "<div class='error'>ID NÃO INFORMADO</div>";
     return;
   }
 
@@ -160,7 +215,7 @@ async function loadData() {
     const res = await fetch(SHEET_URL);
     const text = await res.text();
 
-    const rows = text.trim().split("\n").map(r => r.split(","));
+    const rows = text.trim().split("\n").map(r => r.split(",").map(c => c.trim()));
 
     for (let i = 1; i < rows.length; i++) {
       const [sheetId, nome, status, foto, tipo] = rows[i];
@@ -171,7 +226,7 @@ async function loadData() {
         const cls = st === "ATIVO" ? "ativo" : "inativo";
 
         result.innerHTML = `
-          <img class="foto" src="${foto}">
+          <img class="foto" src="${foto}" onerror="this.src='https://via.placeholder.com/110'">
           <div class="name">${nome}</div>
           <div class="tipo">${tipo || "MEMBRO"}</div>
           <div class="status ${cls}">${st}</div>
@@ -180,10 +235,10 @@ async function loadData() {
       }
     }
 
-    result.innerHTML = "Não encontrado";
+    result.innerHTML = "<div class='error'>NÃO ENCONTRADO</div>";
 
   } catch {
-    result.innerHTML = "Erro ao carregar";
+    result.innerHTML = "<div class='error'>ERRO NA CONEXÃO</div>";
   }
 }
 
