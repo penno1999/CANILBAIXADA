@@ -18,7 +18,7 @@
   font-family: 'Poppins', sans-serif;
 }
 
-/* 🔥 CORREÇÃO MOBILE */
+/* MOBILE FIX */
 body {
   min-height: 100vh;
   min-height: 100dvh;
@@ -28,35 +28,24 @@ body {
   overflow: hidden;
 }
 
-/* 🔥 FUNDO COM MOVIMENTO SUAVE */
+/* FUNDO */
 .bg {
   position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
-
-  background: url('FUNDO.jpeg') center center no-repeat;
-  background-size: cover;
-
-  z-index: 0;
-
+  background: url('FUNDO.jpeg') center/cover no-repeat;
   animation: zoomBg 20s ease-in-out infinite alternate;
 }
 
-/* camada blur */
 .bg::after {
   content: "";
   position: absolute;
   inset: 0;
-
   backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-
   background: rgba(0,0,0,0.35);
 }
 
-/* 📱 APP */
+/* APP */
 .app {
   position: relative;
   z-index: 2;
@@ -68,7 +57,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 0 60px rgba(0,0,0,0.9);
 }
 
 /* CARD */
@@ -77,29 +65,21 @@ body {
   padding: 25px;
   border-radius: 22px;
   text-align: center;
-
   background: #111;
-  border: 1px solid rgba(255,255,255,0.05);
-
-  box-shadow:
-    0 10px 30px rgba(0,0,0,0.8),
-    inset 0 0 15px rgba(255,255,255,0.03);
-
   animation: enter 0.4s ease-out;
 }
 
 /* LOGO */
 .logo {
   width: 140px;
-  margin-bottom: 0;
 }
 
-/* TEXTO COLADO */
+/* TEXTO */
 .brand {
   font-size: 16px;
   font-weight: 700;
-  color: #fff;
   margin-top: -12px;
+  color: #fff;
 }
 
 /* FOTO */
@@ -109,45 +89,31 @@ body {
   border-radius: 50%;
   object-fit: cover;
   margin: 12px auto;
-  border: 2px solid #fff;
 }
 
-/* NOME */
+/* 🔥 NOME INTELIGENTE */
 .name {
   font-size: 22px;
   font-weight: 800;
   color: #fff;
+  white-space: nowrap;
 }
 
 /* TIPO */
 .tipo {
-  margin-top: 4px;
   font-size: 13px;
   color: #aaa;
 }
 
 /* STATUS */
 .status {
-  margin-top: 12px;
+  margin-top: 10px;
   font-size: 24px;
   font-weight: 800;
-  padding: 10px;
-  border-radius: 12px;
 }
 
-.ativo {
-  color: #00ff88;
-  background: rgba(0,255,136,0.08);
-}
-
-.inativo {
-  color: #ffd700;
-  background: rgba(255,215,0,0.08);
-}
-
-.error {
-  color: #ffcc00;
-}
+.ativo { color: #00ff88; }
+.inativo { color: #ffd700; }
 
 /* FRASE */
 .frase-box {
@@ -155,34 +121,19 @@ body {
   bottom: 10px;
   width: 100%;
   text-align: center;
-  z-index: 3;
 }
 
 .frase-main {
-  font-family: 'Permanent Marker', cursive;
-  font-size: 22px;
+  font-family: 'Permanent Marker';
   color: #fff;
-  opacity: 0.9;
-}
-
-.frase-sub {
-  font-size: 11px;
-  color: #ccc;
 }
 
 /* ANIMAÇÕES */
 @keyframes enter {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
 }
 
-/* 🔥 MOVIMENTO DO FUNDO */
 @keyframes zoomBg {
   0% { transform: scale(1.05); }
   100% { transform: scale(1.15); }
@@ -207,7 +158,6 @@ body {
 
 <div class="frase-box">
   <div class="frase-main">NÃO É MODA, É TRADIÇÃO!</div>
-  <div class="frase-sub">COMO NÃO SOMOS OS ÚNICOS, DECIDIMOS SER OS MELHORES!</div>
 </div>
 
 <script>
@@ -217,44 +167,65 @@ function getId() {
   return new URLSearchParams(window.location.search).get("id");
 }
 
+/* 🔥 ABREVIAÇÃO INTELIGENTE */
+function ajustarNome(nome, elemento) {
+  let nomeAtual = nome;
+
+  function abreviar(nomeBase) {
+    const ignorar = ["de","da","do","dos"];
+    const partes = nomeBase.split(" ");
+
+    if (partes.length <= 2) return nomeBase;
+
+    return partes.map((p, i) => {
+      if (i === 0 || i === partes.length - 1) return p;
+      return ignorar.includes(p.toLowerCase()) ? p : p[0] + ".";
+    }).join(" ");
+  }
+
+  elemento.innerText = nomeAtual;
+
+  while (elemento.scrollWidth > elemento.clientWidth) {
+    nomeAtual = abreviar(nomeAtual);
+    elemento.innerText = nomeAtual;
+
+    if (nomeAtual.includes(".")) break;
+  }
+}
+
 async function loadData() {
   const result = document.getElementById("result");
   const id = getId();
 
   if (!id) {
-    result.innerHTML = "<div class='error'>ID NÃO INFORMADO</div>";
+    result.innerHTML = "ID não informado";
     return;
   }
 
-  try {
-    const res = await fetch(SHEET_URL);
-    const text = await res.text();
+  const res = await fetch(SHEET_URL);
+  const text = await res.text();
+  const rows = text.split("\n").map(r => r.split(","));
 
-    const rows = text.trim().split("\n").map(r => r.split(",").map(c => c.trim()));
+  for (let i = 1; i < rows.length; i++) {
+    const [sheetId, nome, status, foto, tipo] = rows[i];
 
-    for (let i = 1; i < rows.length; i++) {
-      const [sheetId, nome, status, foto, tipo] = rows[i];
+    if (sheetId === id) {
 
-      if (sheetId === id) {
+      result.innerHTML = `
+        <img class="foto" src="${foto}">
+        <div class="name" id="nome"></div>
+        <div class="tipo">${tipo || "MEMBRO"}</div>
+        <div class="status ${status.toLowerCase()}">${status}</div>
+      `;
 
-        const st = status.toUpperCase();
-        const cls = st === "ATIVO" ? "ativo" : "inativo";
+      const elNome = document.getElementById("nome");
+      ajustarNome(nome, elNome);
 
-        result.innerHTML = `
-          <img class="foto" src="${foto}" onerror="this.src='https://via.placeholder.com/110'">
-          <div class="name">${nome}</div>
-          <div class="tipo">${tipo || "MEMBRO"}</div>
-          <div class="status ${cls}">${st}</div>
-        `;
-        return;
-      }
+      return;
     }
-
-    result.innerHTML = "<div class='error'>NÃO ENCONTRADO</div>";
-
-  } catch {
-    result.innerHTML = "<div class='error'>ERRO NA CONEXÃO</div>";
   }
+
+  result.innerHTML = "Não encontrado";
 }
 
 loadData();
