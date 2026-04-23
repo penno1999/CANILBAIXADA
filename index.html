@@ -91,7 +91,7 @@ body {
   margin: 12px auto;
 }
 
-/* 🔥 NOME INTELIGENTE */
+/* NOME */
 .name {
   font-size: 22px;
   font-weight: 800;
@@ -115,17 +115,42 @@ body {
 .ativo { color: #00ff88; }
 .inativo { color: #ffd700; }
 
-/* FRASE */
+.error { color: #ffcc00; }
+
+/* 🔥 BANNER TORCIDA */
 .frase-box {
   position: fixed;
-  bottom: 10px;
+  bottom: 0;
   width: 100%;
+  z-index: 3;
+  background: rgba(0,0,0,0.8);
+  padding: 8px 0;
+  overflow: hidden;
+}
+
+/* FRASE PRINCIPAL */
+.frase-main {
+  font-family: 'Permanent Marker', cursive;
+  font-size: 22px;
+  color: #fff;
   text-align: center;
 }
 
-.frase-main {
-  font-family: 'Permanent Marker';
-  color: #fff;
+/* FAIXA ROLANDO */
+.banner {
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
+  margin-top: 3px;
+}
+
+.banner span {
+  display: inline-block;
+  padding-left: 100%;
+  animation: slideBanner 12s linear infinite;
+  font-size: 12px;
+  color: #ccc;
+  letter-spacing: 1px;
 }
 
 /* ANIMAÇÕES */
@@ -137,6 +162,12 @@ body {
 @keyframes zoomBg {
   0% { transform: scale(1.05); }
   100% { transform: scale(1.15); }
+}
+
+/* 🔥 MOVIMENTO DO BANNER */
+@keyframes slideBanner {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
 }
 </style>
 </head>
@@ -156,8 +187,13 @@ body {
   </div>
 </div>
 
+<!-- 🔥 BANNER TORCIDA -->
 <div class="frase-box">
   <div class="frase-main">NÃO É MODA, É TRADIÇÃO!</div>
+
+  <div class="banner">
+    <span>COMO NÃO SOMOS OS ÚNICOS, DECIDIMOS SER OS MELHORES • COMO NÃO SOMOS OS ÚNICOS, DECIDIMOS SER OS MELHORES •</span>
+  </div>
 </div>
 
 <script>
@@ -167,7 +203,7 @@ function getId() {
   return new URLSearchParams(window.location.search).get("id");
 }
 
-/* 🔥 ABREVIAÇÃO INTELIGENTE */
+/* ABREVIAÇÃO INTELIGENTE */
 function ajustarNome(nome, elemento) {
   let nomeAtual = nome;
 
@@ -198,34 +234,42 @@ async function loadData() {
   const id = getId();
 
   if (!id) {
-    result.innerHTML = "ID não informado";
+    result.innerHTML = "<div class='error'>ID NÃO INFORMADO</div>";
     return;
   }
 
-  const res = await fetch(SHEET_URL);
-  const text = await res.text();
-  const rows = text.split("\n").map(r => r.split(","));
+  try {
+    const res = await fetch(SHEET_URL);
+    const text = await res.text();
+    const rows = text.trim().split("\n").map(r => r.split(",").map(c => c.trim()));
 
-  for (let i = 1; i < rows.length; i++) {
-    const [sheetId, nome, status, foto, tipo] = rows[i];
+    for (let i = 1; i < rows.length; i++) {
+      const [sheetId, nome, status, foto, tipo] = rows[i];
 
-    if (sheetId === id) {
+      if (sheetId === id) {
 
-      result.innerHTML = `
-        <img class="foto" src="${foto}">
-        <div class="name" id="nome"></div>
-        <div class="tipo">${tipo || "MEMBRO"}</div>
-        <div class="status ${status.toLowerCase()}">${status}</div>
-      `;
+        const st = status.toUpperCase();
+        const cls = st === "ATIVO" ? "ativo" : "inativo";
 
-      const elNome = document.getElementById("nome");
-      ajustarNome(nome, elNome);
+        result.innerHTML = `
+          <img class="foto" src="${foto}" onerror="this.src='https://via.placeholder.com/110'">
+          <div class="name" id="nome"></div>
+          <div class="tipo">${tipo || "MEMBRO"}</div>
+          <div class="status ${cls}">${st}</div>
+        `;
 
-      return;
+        const elNome = document.getElementById("nome");
+        ajustarNome(nome, elNome);
+
+        return;
+      }
     }
-  }
 
-  result.innerHTML = "Não encontrado";
+    result.innerHTML = "<div class='error'>NÃO ENCONTRADO</div>";
+
+  } catch {
+    result.innerHTML = "<div class='error'>ERRO NA CONEXÃO</div>";
+  }
 }
 
 loadData();
