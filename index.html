@@ -8,7 +8,6 @@
 <title>Verificação - 2° CANIL BAIXADA</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
 
 <style>
 * {
@@ -23,90 +22,51 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  background: #000;
+}
+
+/* 🔥 TELA ESTILO APP */
+.app {
+  width: 100%;
+  max-width: 420px;
+  height: 90vh;
+  border-radius: 30px;
   overflow: hidden;
+  background: #0a0a0a;
+  box-shadow: 0 0 60px rgba(0,0,0,0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* FUNDO */
-.bg {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background: url('FUNDO.jpeg') no-repeat center/cover;
-  filter: blur(8px);
-  transform: scale(1.1);
-  animation: zoomBg 20s ease-in-out infinite alternate;
-  z-index: 0;
-}
-
-/* PARTÍCULAS */
-#particles {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  pointer-events: none;
-}
-
-/* OVERLAY */
-.overlay {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.75);
-  z-index: 2;
-}
-
-/* 🔥 CARD PRETO PREMIUM */
+/* CARD */
 .container {
-  position: relative;
-  z-index: 3;
   width: 90%;
-  max-width: 380px;
-  padding: 30px;
-  border-radius: 18px;
+  padding: 25px;
+  border-radius: 22px;
   text-align: center;
 
-  background: #111111;
-  border: 1px solid rgba(255,255,255,0.06);
+  background: #111;
+  border: 1px solid rgba(255,255,255,0.05);
 
   box-shadow:
-    0 12px 40px rgba(0,0,0,0.95),
-    inset 0 0 25px rgba(255,255,255,0.03);
+    0 10px 30px rgba(0,0,0,0.8),
+    inset 0 0 15px rgba(255,255,255,0.03);
 
-  animation: enterCard 0.6s ease-out forwards, floatCard 6s ease-in-out infinite;
+  animation: enter 0.4s ease-out;
 }
 
-/* status borda */
-.ativo-border {
-  border: 1px solid #00ff88;
-}
-
-.inativo-border {
-  border: 1px solid #ffd700;
-}
-
-/* 🔥 HEADER ULTRA COLADO */
-.header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 2px; /* mínimo */
-}
-
+/* HEADER */
 .logo {
-  width: 150px;
-  height: auto;
-  margin-bottom: 0px; /* colado total */
+  width: 140px;
+  margin-bottom: 0;
 }
 
-/* TEXTO COLADO NA LOGO */
 .brand {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   color: #fff;
-  letter-spacing: 1px;
-  line-height: 1;
-  margin-top: -12px; /* 🔥 puxa bem pra cima */
+  margin-top: -10px;
 }
 
 /* FOTO */
@@ -115,74 +75,46 @@ body {
   height: 110px;
   border-radius: 50%;
   object-fit: cover;
-  margin: 10px auto;
-  display: block;
+  margin: 12px auto;
   border: 2px solid #fff;
 }
 
-.title {
-  font-weight: 600;
-  font-size: 14px;
-  margin-bottom: 10px;
+/* 🔥 NOME MAIS FORTE */
+.name {
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+/* TIPO DE MEMBRO */
+.tipo {
+  margin-top: 5px;
+  font-size: 13px;
   color: #aaa;
 }
 
-.name {
-  font-size: 20px;
-  color: #fff;
-}
-
+/* STATUS */
 .status {
-  margin-top: 10px;
-  font-size: 26px;
+  margin-top: 12px;
+  font-size: 24px;
   font-weight: 800;
-  padding: 12px;
-  border-radius: 10px;
+  padding: 10px;
+  border-radius: 12px;
 }
 
 .ativo {
   color: #00ff88;
-  background: rgba(0,255,100,0.1);
+  background: rgba(0,255,136,0.08);
 }
 
 .inativo {
   color: #ffd700;
-  background: rgba(255,215,0,0.1);
+  background: rgba(255,215,0,0.08);
 }
 
-.error {
-  color: #ffcc00;
-  font-weight: bold;
-}
-
-/* FRASE */
-.frase-box {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  text-align: center;
-  z-index: 9999;
-  padding: 10px;
-}
-
-.frase-main {
-  font-family: 'Permanent Marker', cursive;
-  font-size: 26px;
-  color: #fff;
-}
-
-.frase-sub {
-  font-size: 12px;
-  color: #ccc;
-}
-
-/* ANIMAÇÕES */
-@keyframes zoomBg {
-  from { transform: scale(1.1); }
-  to { transform: scale(1.2); }
-}
-
-@keyframes enterCard {
+/* ANIMAÇÕES RÁPIDAS */
+@keyframes enter {
   from {
     opacity: 0;
     transform: scale(0.95);
@@ -192,61 +124,23 @@ body {
     transform: scale(1);
   }
 }
-
-@keyframes floatCard {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-6px); }
-  100% { transform: translateY(0px); }
-}
 </style>
 </head>
 
 <body>
 
-<div class="bg"></div>
-<div id="particles"></div>
-<div class="overlay"></div>
+<div class="app">
+  <div class="container" id="card">
 
-<div class="container" id="card">
-
-  <!-- LOGO + TEXTO ULTRA COLADO -->
-  <div class="header">
     <img class="logo" src="LOGO.jpeg">
     <div class="brand">2° CANIL BAIXADA</div>
+
+    <div id="result"></div>
+
   </div>
-
-  <div id="result"></div>
 </div>
-
-<div class="frase-box">
-  <div class="frase-main">NÃO É MODA, É TRADIÇÃO!</div>
-  <div class="frase-sub">COMO NÃO SOMOS OS ÚNICOS, DECIDIMOS SER OS MELHORES!</div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
 
 <script>
-function loadParticles(color) {
-  tsParticles.load("particles", {
-    fullScreen: { enable: false },
-    particles: {
-      number: { value: 40 },
-      color: { value: color },
-      links: {
-        enable: true,
-        color: color,
-        opacity: 0.2,
-        distance: 120
-      },
-      move: { enable: true, speed: 1 },
-      size: { value: { min: 1, max: 3 } },
-      opacity: { value: 0.4 }
-    }
-  });
-}
-
-loadParticles("#ffffff");
-
 const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRc-Ze2QdExw43RL_ESfAnr6S9Hv_Qw61akVcWDIAlToZkANo9zn-ZACLtYMsLwFRDY52zv2DYRhBin/pub?output=csv";
 
 function getId() {
@@ -255,11 +149,10 @@ function getId() {
 
 async function loadData() {
   const result = document.getElementById("result");
-  const card = document.getElementById("card");
   const id = getId();
 
   if (!id) {
-    result.innerHTML = "<div class='error'>ID NÃO INFORMADO</div>";
+    result.innerHTML = "ID não informado";
     return;
   }
 
@@ -267,43 +160,30 @@ async function loadData() {
     const res = await fetch(SHEET_URL);
     const text = await res.text();
 
-    const rows = text.trim().split("\n").map(r => r.split(",").map(c => c.trim()));
-
-    let found = false;
+    const rows = text.trim().split("\n").map(r => r.split(","));
 
     for (let i = 1; i < rows.length; i++) {
-      const [sheetId, nome, status, foto] = rows[i];
+      const [sheetId, nome, status, foto, tipo] = rows[i];
 
       if (sheetId === id) {
-        found = true;
 
         const st = status.toUpperCase();
         const cls = st === "ATIVO" ? "ativo" : "inativo";
 
-        if (st === "ATIVO") {
-          loadParticles("#00ff88");
-          card.classList.add("ativo-border");
-        } else {
-          loadParticles("#ffd700");
-          card.classList.add("inativo-border");
-        }
-
         result.innerHTML = `
-          <div class="title">SÓCIO VERIFICADO</div>
-          <img class="foto" src="${foto}" onerror="this.src='https://via.placeholder.com/110'">
+          <img class="foto" src="${foto}">
           <div class="name">${nome}</div>
+          <div class="tipo">${tipo || "MEMBRO"}</div>
           <div class="status ${cls}">${st}</div>
         `;
-        break;
+        return;
       }
     }
 
-    if (!found) {
-      result.innerHTML = "<div class='error'>NÃO ENCONTRADO</div>";
-    }
+    result.innerHTML = "Não encontrado";
 
   } catch {
-    result.innerHTML = "<div class='error'>ERRO NA CONEXÃO</div>";
+    result.innerHTML = "Erro ao carregar";
   }
 }
 
